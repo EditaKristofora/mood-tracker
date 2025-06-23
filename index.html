@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mood Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -16,12 +16,13 @@
     <input id="passwordInput" type="password" placeholder="Password" required class="w-full p-2 border rounded" />
     <button id="loginButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full">Login</button>
     <div id="loginMessage" class="text-sm text-red-600 hidden">Login failed. Try again.</div>
-    <p class="text-sm mt-2">Don’t have an account?
+    <p class="text-sm mt-2">
+      Don’t have an account?
       <button id="showSignup" class="text-blue-600 underline">Sign up</button>
     </p>
   </div>
 
-  <!-- Signup Section -->
+  <!-- Sign Up Section -->
   <div id="signupSection" class="hidden bg-white shadow-xl rounded-xl p-6 w-full max-w-sm space-y-4 mb-6">
     <h2 class="text-xl font-bold">Sign Up</h2>
     <input id="signupEmail" type="email" placeholder="Email" required class="w-full p-2 border rounded" />
@@ -77,30 +78,19 @@
 
     const showSignup = document.getElementById("showSignup");
     const signupSection = document.getElementById("signupSection");
+    const loginSection = document.getElementById("loginSection");
+    const signupButton = document.getElementById("signupButton");
     const signupEmail = document.getElementById("signupEmail");
     const signupPassword = document.getElementById("signupPassword");
-    const signupButton = document.getElementById("signupButton");
     const signupMessage = document.getElementById("signupMessage");
     const backToLogin = document.getElementById("backToLogin");
 
     let accessToken = "";
 
-    // Switch image when mood changes
+    // Toggle capybara image
     moodSelect.addEventListener('change', function () {
       const mood = this.value;
       capybaraImage.src = `frontend/mood-images/${mood}.png`;
-    });
-
-    // Show signup form
-    showSignup.addEventListener("click", () => {
-      loginSection.classList.add("hidden");
-      signupSection.classList.remove("hidden");
-    });
-
-    // Back to login
-    backToLogin.addEventListener("click", () => {
-      signupSection.classList.add("hidden");
-      loginSection.classList.remove("hidden");
     });
 
     // Login
@@ -128,10 +118,31 @@
           alert("❌ Login failed: " + (data.detail || "Unknown error"));
         }
       } catch (error) {
+        console.error("Login error:", error);
         alert("⚠️ Network error");
-        console.error(error);
         loginMessage.classList.remove("hidden");
       }
+    });
+
+    // Logout
+    logoutButton.addEventListener("click", () => {
+      accessToken = "";
+      moodForm.classList.add("hidden");
+      historySection.classList.add("hidden");
+      emailInput.value = "";
+      passwordInput.value = "";
+      alert("🚪 Logged out.");
+    });
+
+    // Toggle signup
+    showSignup.addEventListener("click", () => {
+      loginSection.classList.add("hidden");
+      signupSection.classList.remove("hidden");
+    });
+
+    backToLogin.addEventListener("click", () => {
+      signupSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
     });
 
     // Signup
@@ -156,14 +167,14 @@
           alert("❌ Signup failed: " + (data.detail || "Unknown error"));
         }
       } catch (error) {
-        alert("⚠️ Network error");
-        console.error(error);
+        console.error("Signup error:", error);
         signupMessage.classList.remove("hidden");
+        alert("⚠️ Network error");
       }
     });
 
     // Submit mood
-    moodForm.addEventListener("submit", async function (e) {
+    moodForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!accessToken) {
         alert("⚠️ Please log in first.");
@@ -175,7 +186,7 @@
       const timestamp = new Date().toISOString();
 
       try {
-        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/log-mood", {
+        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/moods", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -200,7 +211,7 @@
     // Fetch mood history
     async function fetchMoodHistory() {
       try {
-        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/get-moods", {
+        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/moods", {
           method: "GET",
           headers: {
             "Authorization": accessToken,
@@ -230,16 +241,6 @@
         console.error("⚠️ Error fetching history:", error);
       }
     }
-
-    // Logout
-    logoutButton.addEventListener("click", function () {
-      accessToken = "";
-      moodForm.classList.add("hidden");
-      historySection.classList.add("hidden");
-      emailInput.value = "";
-      passwordInput.value = "";
-      alert("🚪 Logged out.");
-    });
   </script>
 </body>
 </html>
