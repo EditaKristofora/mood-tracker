@@ -89,7 +89,7 @@
     // Toggle capybara image
     moodSelect.addEventListener('change', function () {
       const mood = this.value;
-      capybaraImage.src = `https://editakristofora.github.io/mood-tracker/mood-images/${mood}.png`;
+      capybaraImage.src = `mood-images/${mood}.png`;
     });
 
     // Login
@@ -224,7 +224,7 @@
             const div = document.createElement("div");
             div.className = "p-4 bg-white shadow rounded flex items-center space-x-4";
             div.innerHTML = `
-              <img src="https://editakristofora.github.io/mood-tracker/mood-images/${entry.mood}.png" alt="${entry.mood}" class="w-10 h-10" />
+              <img src="mood-images/${entry.mood}.png" alt="${entry.mood}" class="..." />
               <div>
                 <p class="font-semibold">${entry.mood}</p>
                 <p class="text-sm text-gray-500">${new Date(entry.timestamp).toLocaleString()}</p>
