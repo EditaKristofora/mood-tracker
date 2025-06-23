@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mood-tracker-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./start.sh
+    envVars:
+      - key: SUPABASE_URL
+        value: https://awijisdalhbtjvketael.supabase.co
+      - key: SUPABASE_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3aWppc2RhbGhidGp2a2V0YWVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzMzAzMzcsImV4cCI6MjA2NTkwNjMzN30.Cj-Dr3Pcmo7EKrkZZUrYGuA3EH3XLrKZqfJUVu2Ux1k
