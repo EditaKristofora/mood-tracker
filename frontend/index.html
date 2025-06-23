@@ -14,19 +14,19 @@
     <h2 class="text-xl font-bold">Login</h2>
     <input id="emailInput" type="email" placeholder="Email" required class="w-full p-2 border rounded" />
     <input id="passwordInput" type="password" placeholder="Password" required class="w-full p-2 border rounded" />
-    <button id="loginButton" type="button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full">Login</button>
+    <button id="loginButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full">Login</button>
     <div id="loginMessage" class="text-sm text-red-600 hidden">Login failed. Try again.</div>
     <p class="text-sm mt-2">Don’t have an account?
       <button id="showSignup" class="text-blue-600 underline">Sign up</button>
     </p>
   </div>
 
-  <!-- Sign Up Section -->
+  <!-- Signup Section -->
   <div id="signupSection" class="hidden bg-white shadow-xl rounded-xl p-6 w-full max-w-sm space-y-4 mb-6">
     <h2 class="text-xl font-bold">Sign Up</h2>
     <input id="signupEmail" type="email" placeholder="Email" required class="w-full p-2 border rounded" />
     <input id="signupPassword" type="password" placeholder="Password" required class="w-full p-2 border rounded" />
-    <button id="signupButton" type="button" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-full">Create Account</button>
+    <button id="signupButton" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-full">Create Account</button>
     <div id="signupMessage" class="text-sm text-red-600 hidden">Signup failed. Try again.</div>
     <button id="backToLogin" class="text-sm text-gray-600 underline">Back to Login</button>
   </div>
@@ -53,7 +53,7 @@
   <div id="successMsg" class="text-green-600 font-semibold mt-4 hidden">Mood logged successfully!</div>
 
   <!-- Capybara Image -->
-  <img id="capybaraImage" src="https://editakristofora.github.io/mood-tracker/mood-images/happy.png" alt="Mood Capybara" class="w-48 h-48 object-contain transition-all duration-300 mt-4" />
+  <img id="capybaraImage" src="mood-images/happy.png" alt="Mood Capybara" class="w-48 h-48 object-contain transition-all duration-300 mt-4" />
 
   <!-- Mood History -->
   <div id="historySection" class="hidden w-full max-w-sm mt-8 space-y-2">
@@ -77,23 +77,34 @@
 
     const showSignup = document.getElementById("showSignup");
     const signupSection = document.getElementById("signupSection");
-    const loginSection = document.getElementById("loginSection");
-    const signupButton = document.getElementById("signupButton");
     const signupEmail = document.getElementById("signupEmail");
     const signupPassword = document.getElementById("signupPassword");
+    const signupButton = document.getElementById("signupButton");
     const signupMessage = document.getElementById("signupMessage");
     const backToLogin = document.getElementById("backToLogin");
 
     let accessToken = "";
 
-    // Toggle capybara image
+    // Switch image when mood changes
     moodSelect.addEventListener('change', function () {
       const mood = this.value;
       capybaraImage.src = `mood-images/${mood}.png`;
     });
 
+    // Show signup form
+    showSignup.addEventListener("click", () => {
+      loginSection.classList.add("hidden");
+      signupSection.classList.remove("hidden");
+    });
+
+    // Back to login
+    backToLogin.addEventListener("click", () => {
+      signupSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
+    });
+
     // Login
-    loginButton.addEventListener("click", async function () {
+    loginButton.addEventListener("click", async () => {
       const email = emailInput.value;
       const password = passwordInput.value;
 
@@ -117,35 +128,14 @@
           alert("❌ Login failed: " + (data.detail || "Unknown error"));
         }
       } catch (error) {
-        console.error("⚠️ Login error:", error);
         alert("⚠️ Network error");
+        console.error(error);
         loginMessage.classList.remove("hidden");
       }
     });
 
-    // Logout
-    logoutButton.addEventListener("click", function () {
-      accessToken = "";
-      moodForm.classList.add("hidden");
-      historySection.classList.add("hidden");
-      emailInput.value = "";
-      passwordInput.value = "";
-      alert("🚪 Logged out.");
-    });
-
-    // Sign up toggle
-    showSignup.addEventListener("click", () => {
-      loginSection.classList.add("hidden");
-      signupSection.classList.remove("hidden");
-    });
-
-    backToLogin.addEventListener("click", () => {
-      signupSection.classList.add("hidden");
-      loginSection.classList.remove("hidden");
-    });
-
-    // Sign up
-    signupButton.addEventListener("click", async function () {
+    // Signup
+    signupButton.addEventListener("click", async () => {
       const email = signupEmail.value;
       const password = signupPassword.value;
 
@@ -166,9 +156,9 @@
           alert("❌ Signup failed: " + (data.detail || "Unknown error"));
         }
       } catch (error) {
-        console.error("⚠️ Signup error:", error);
-        signupMessage.classList.remove("hidden");
         alert("⚠️ Network error");
+        console.error(error);
+        signupMessage.classList.remove("hidden");
       }
     });
 
@@ -185,7 +175,7 @@
       const timestamp = new Date().toISOString();
 
       try {
-        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/submit", {
+        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/log-mood", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -210,7 +200,7 @@
     // Fetch mood history
     async function fetchMoodHistory() {
       try {
-        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/history", {
+        const response = await fetch("https://mood-tracker-backend-2s24.onrender.com/get-moods", {
           method: "GET",
           headers: {
             "Authorization": accessToken,
@@ -224,7 +214,7 @@
             const div = document.createElement("div");
             div.className = "p-4 bg-white shadow rounded flex items-center space-x-4";
             div.innerHTML = `
-              <img src="mood-images/${entry.mood}.png" alt="${entry.mood}" class="..." />
+              <img src="mood-images/${entry.mood}.png" alt="${entry.mood}" class="w-10 h-10" />
               <div>
                 <p class="font-semibold">${entry.mood}</p>
                 <p class="text-sm text-gray-500">${new Date(entry.timestamp).toLocaleString()}</p>
@@ -240,6 +230,16 @@
         console.error("⚠️ Error fetching history:", error);
       }
     }
+
+    // Logout
+    logoutButton.addEventListener("click", function () {
+      accessToken = "";
+      moodForm.classList.add("hidden");
+      historySection.classList.add("hidden");
+      emailInput.value = "";
+      passwordInput.value = "";
+      alert("🚪 Logged out.");
+    });
   </script>
 </body>
 </html>
