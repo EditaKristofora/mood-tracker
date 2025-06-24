@@ -52,7 +52,7 @@
   <div id="successMsg" class="text-green-600 font-semibold mt-4 hidden">Mood logged successfully!</div>
 
   <!-- Capybara Image -->
-  <img id="capybaraImage" src="mood-images/happy.png" alt="Mood Capybara" class="w-48 h-48 object-contain transition-all duration-300 mt-4" />
+  <img id="capybaraImage" src="./mood-images/happy.png" alt="Mood Capybara" class="w-48 h-48 object-contain transition-all duration-300 mt-4" />
 
   <!-- Mood History -->
   <div id="historySection" class="hidden w-full max-w-sm mt-8 space-y-2">
@@ -87,7 +87,7 @@
 
     moodSelect.addEventListener('change', function () {
       const mood = this.value;
-      capybaraImage.src = `mood-images/${mood}.png`;
+      capybaraImage.src = `./mood-images/${mood}.png`;
     });
 
     loginButton.addEventListener("click", async function () {
@@ -216,7 +216,7 @@
             const div = document.createElement("div");
             div.className = "p-4 bg-white shadow rounded flex items-center space-x-4";
             div.innerHTML = `
-              <img src="mood-images/${entry.mood}.png" alt="${entry.mood}" class="w-10 h-10" />
+              <img src="./mood-images/${entry.mood}.png" alt="${entry.mood}" class="w-10 h-10" />
               <div>
                 <p class="font-semibold">${entry.mood}</p>
                 <p class="text-sm text-gray-500">${new Date(entry.timestamp).toLocaleString()}</p>
