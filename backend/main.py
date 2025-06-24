@@ -11,7 +11,7 @@ app = FastAPI()
 # 👇 ADD THIS CORS CONFIGURATION
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ← You can replace * with ["http://localhost:5500"] if needed
+    allow_origins=["https://editakristofora.github.io"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
